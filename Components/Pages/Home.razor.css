@@ -1,0 +1,90 @@
+/* Hero */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 55vh;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, #052767 0%, #3a0647 100%);
+    border-radius: 0 0 1.5rem 1.5rem;
+    text-align: center;
+    color: white;
+}
+
+.hero-content {
+    max-width: 640px;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.88;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.hero .btn-outline-secondary {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.hero .btn-outline-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: white;
+    color: white;
+}
+
+/* Features */
+.features {
+    padding: 3.5rem 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.features-heading {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 2.5rem;
+    color: #1a1a2e;
+}
+
+.feature-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.feature-card {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 0.75rem;
+    padding: 2rem 1.5rem;
+    text-align: center;
+}
+
+.feature-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #1b6ec2;
+}
+
+.feature-card h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #1a1a2e;
+}
+
+.feature-card p {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+}

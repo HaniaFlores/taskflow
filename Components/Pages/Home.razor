@@ -1,7 +1,43 @@
-﻿@page "/"
+@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>TaskFlow – Personal Task Manager</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Stay on top of everything.</h1>
+        <p class="hero-subtitle">
+            TaskFlow is a simple, personal task manager for students and young professionals.
+            Create tasks, organize by category, and track what you've accomplished — all in one place.
+        </p>
+        <AuthorizeView>
+            <Authorized>
+                <a href="/dashboard" class="btn btn-primary btn-lg">Go to My Tasks</a>
+            </Authorized>
+            <NotAuthorized>
+                <a href="/Account/Register" class="btn btn-primary btn-lg me-2">Get Started</a>
+                <a href="/Account/Login" class="btn btn-outline-secondary btn-lg">Log In</a>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</div>
 
-Welcome to your new app.
+<div class="features">
+    <h2 class="features-heading">Everything you need, nothing you don't.</h2>
+    <div class="feature-cards">
+        <div class="feature-card">
+            <div class="feature-icon">&#10003;</div>
+            <h3>Create &amp; Manage Tasks</h3>
+            <p>Add tasks with a title and optional description. Edit or delete them anytime, and mark them complete when you're done.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">&#9782;</div>
+            <h3>Organize by Category</h3>
+            <p>Assign each task to <strong>School</strong>, <strong>Work</strong>, or <strong>Personal</strong> and filter your list to focus on one area at a time.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">&#128274;</div>
+            <h3>Your Tasks, Only Yours</h3>
+            <p>Each account is private. Log in securely and see only your own tasks — no shared lists, no clutter.</p>
+        </div>
+    </div>
+</div>

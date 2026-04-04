@@ -1,0 +1,44 @@
+@page "/Account/RegisterConfirmation"
+
+@rendermode InteractiveServer
+@implements IDisposable
+
+@inject NavigationManager NavigationManager
+
+<PageTitle>Registration Successful</PageTitle>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="text-center" style="max-width: 480px; width: 100%;">
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Registration Successful!</h4>
+            <p class="mb-0">Your account has been created. You will be redirected to the login page shortly.</p>
+        </div>
+        <p class="text-muted">Redirecting in <strong>@countdown</strong> seconds...</p>
+        <a href="/Account/Login" class="btn btn-primary">Go to Login</a>
+    </div>
+</div>
+
+@code {
+    private int countdown = 3;
+    private System.Threading.Timer? timer;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            timer = new System.Threading.Timer(async _ =>
+            {
+                countdown--;
+                await InvokeAsync(StateHasChanged);
+
+                if (countdown <= 0)
+                {
+                    timer?.Dispose();
+                    await InvokeAsync(() => NavigationManager.NavigateTo("/Account/Login"));
+                }
+            }, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
+        }
+    }
+
+    public void Dispose() => timer?.Dispose();
+}

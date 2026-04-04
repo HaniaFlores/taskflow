@@ -206,5 +206,6 @@ C:\Users\hanni\TaskFlow\obj\Debug\net9.0\TaskFlow.genruntimeconfig.cache
 C:\Users\hanni\TaskFlow\obj\Debug\net9.0\ref\TaskFlow.dll
 C:\Users\hanni\TaskFlow\obj\Debug\net9.0\TaskFlow.sourcelink.json
 C:\Users\hanni\TaskFlow\obj\Debug\net9.0\scopedcss\Components\Pages\Home.razor.rz.scp.css
-C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\9xjr6hsmjh-jt966k5mli.gz
-C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\e4ehmqsj54-jt966k5mli.gz
+C:\Users\hanni\TaskFlow\obj\Debug\net9.0\scopedcss\Components\Pages\Dashboard.razor.rz.scp.css
+C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\9xjr6hsmjh-ckxds49otq.gz
+C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\e4ehmqsj54-ckxds49otq.gz

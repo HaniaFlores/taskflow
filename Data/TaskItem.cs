@@ -8,6 +8,9 @@ public class TaskItem
     public string Category { get; set; } = "Personal";
     public bool IsCompleted { get; set; } = false;
 
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime? CompletedAt { get; set; }
+
     // Foreign key to the logged-in user
     public string UserId { get; set; } = string.Empty;
 }

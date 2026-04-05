@@ -14,13 +14,49 @@
 <PageTitle>My Tasks</PageTitle>
 
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h2 mb-0">My Tasks</h1>
         @if (!showForm)
         {
             <button class="btn btn-primary" @onclick="ShowCreateForm">+ New Task</button>
         }
     </div>
+
+    @if (!showForm && tasks != null && tasks.Count > 0)
+    {
+        <div class="stats-bar mb-3">
+            <div class="stat-item">
+                <span class="stat-value">@tasks.Count</span>
+                <span class="stat-label">Total</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <span class="stat-value text-primary">@tasks.Count(t => !t.IsCompleted)</span>
+                <span class="stat-label">Pending</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <span class="stat-value text-success">@tasks.Count(t => t.IsCompleted)</span>
+                <span class="stat-label">Done</span>
+            </div>
+        </div>
+
+        <div class="filter-bar mb-4" role="group" aria-label="Filter by category">
+            @foreach (var cat in Categories)
+            {
+                var count = cat == "All" ? tasks.Count : tasks.Count(t => t.Category == cat);
+                <button class="filter-pill @(selectedCategory == cat ? "active" : "")"
+                        @onclick="() => SelectCategory(cat)"
+                        aria-pressed="@(selectedCategory == cat)">
+                    @cat
+                    @if (count > 0)
+                    {
+                        <span class="pill-count">@count</span>
+                    }
+                </button>
+            }
+        </div>
+    }
 
     @if (showForm)
     {
@@ -31,7 +67,9 @@
                     <DataAnnotationsValidator />
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Title</label>
-                        <InputText class="form-control" @bind-Value="formModel.Title" @oninput="e => titleLength = e.Value?.ToString()?.Length ?? 0" placeholder="Task title" maxlength="100" />
+                        <InputText class="form-control" @bind-Value="formModel.Title"
+                                   @oninput="e => titleLength = e.Value?.ToString()?.Length ?? 0"
+                                   placeholder="Task title" maxlength="100" />
                         <div class="d-flex justify-content-between">
                             <ValidationMessage For="@(() => formModel.Title)" class="text-danger small" />
                             <small class="text-muted ms-auto">@titleLength/100</small>
@@ -39,7 +77,9 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Description <span class="fw-normal text-muted">(optional)</span></label>
-                        <InputTextArea class="form-control" @bind-Value="formModel.Description" @oninput="e => descLength = e.Value?.ToString()?.Length ?? 0" rows="2" placeholder="Add details..." maxlength="500" />
+                        <InputTextArea class="form-control" @bind-Value="formModel.Description"
+                                       @oninput="e => descLength = e.Value?.ToString()?.Length ?? 0"
+                                       rows="2" placeholder="Add details..." maxlength="500" />
                         <small class="text-muted d-block text-end">@descLength/500</small>
                     </div>
                     <div class="mb-3">
@@ -63,153 +103,168 @@
 
     @if (!showForm)
     {
-
-    @if (tasks == null)
-    {
-        <p class="text-muted">Loading tasks...</p>
-    }
-    else if (tasks.Count == 0)
-    {
-        <div class="text-center py-5 text-muted">
-            <p class="fs-5">No tasks yet.</p>
-            <p>Click <strong>+ New Task</strong> to get started.</p>
-        </div>
-    }
-    else
-    {
-        var pending   = tasks.Where(t => !t.IsCompleted).ToList();
-        var completed = tasks.Where(t =>  t.IsCompleted).ToList();
-
-        <!-- Pending -->
-        <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
-            <h5 class="mb-0">Pending <span class="badge bg-primary ms-1">@pending.Count</span></h5>
-            @if (pending.Count > 3)
-            {
-                <button class="btn btn-sm btn-outline-primary" @onclick="() => showAllPending = !showAllPending">
-                    @(showAllPending ? "Show Less" : $"See All ({pending.Count})")
-                </button>
-            }
-        </div>
-        @if (pending.Count == 0)
+        @if (tasks == null)
         {
-            <p class="text-muted small mb-4">No pending tasks.</p>
+            <p class="text-muted">Loading tasks...</p>
+        }
+        else if (tasks.Count == 0)
+        {
+            <div class="empty-state">
+                <div class="empty-icon">&#10003;</div>
+                <p class="fs-5 mb-1">No tasks yet.</p>
+                <p class="text-muted">Click <strong>+ New Task</strong> to get started.</p>
+            </div>
         }
         else
         {
-            var visiblePending = showAllPending ? pending : pending.Take(3).ToList();
-            <div class="list-group shadow-sm mb-4">
-                @foreach (var task in visiblePending)
-                {
-                    <div @key="task.Id" class="list-group-item list-group-item-action d-flex align-items-start gap-3 py-3 @CategoryColor(task.Category)">
-                        <input class="form-check-input mt-1 flex-shrink-0" type="checkbox"
-                               checked="@task.IsCompleted"
-                               @onchange="() => ToggleComplete(task.Id, task.IsCompleted)" />
-                        <div class="flex-grow-1 min-width-0">
-                            <div class="d-flex justify-content-between align-items-start gap-2">
-                                <span class="fw-semibold">@task.Title</span>
-                                <span class="badge bg-secondary text-white flex-shrink-0">@task.Category</span>
-                            </div>
-                            @if (!string.IsNullOrWhiteSpace(task.Description))
-                            {
-                                <div class="small mt-1">
-                                    @if (task.Description!.Length <= 200)
-                                    {
-                                        @task.Description
-                                    }
-                                    else if (expandedTasks.Contains(task.Id))
-                                    {
-                                        @task.Description
-                                        <button class="btn btn-link btn-sm p-0 ms-1 text-primary" @onclick="() => ToggleExpand(task.Id)">See less</button>
-                                    }
-                                    else
-                                    {
-                                        @(task.Description!.Substring(0, 200))
-                                        <span>... </span><button class="btn btn-link btn-sm p-0 text-primary" @onclick="() => ToggleExpand(task.Id)">See more</button>
-                                    }
-                                </div>
-                            }
-                            <div class="task-dates small mt-1">
-                                <span>Created: @task.CreatedAt.ToString("MM/dd/yy h:mm tt")</span>
-                            </div>
-                        </div>
-                        <div class="d-flex gap-1 flex-shrink-0">
-                            <button class="btn btn-sm btn-outline-primary" @onclick="() => StartEdit(task)">Edit</button>
-                            <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteTask(task.Id)">Delete</button>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
+            var filtered  = selectedCategory == "All" ? tasks : tasks.Where(t => t.Category == selectedCategory).ToList();
+            var pending   = filtered.Where(t => !t.IsCompleted).ToList();
+            var completed = filtered.Where(t =>  t.IsCompleted).ToList();
 
-        <!-- Completed -->
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 class="mb-0">Completed <span class="badge bg-success ms-1">@completed.Count</span></h5>
-            @if (completed.Count > 3)
+            @if (filtered.Count == 0)
             {
-                <button class="btn btn-sm btn-outline-success" @onclick="() => showAllCompleted = !showAllCompleted">
-                    @(showAllCompleted ? "Show Less" : $"See All ({completed.Count})")
-                </button>
+                <div class="empty-state">
+                    <div class="empty-icon">&#128269;</div>
+                    <p class="fs-5 mb-1">No @selectedCategory tasks.</p>
+                    <p class="text-muted">Try a different category or add a new task.</p>
+                </div>
             }
-        </div>
-        @if (completed.Count == 0)
-        {
-            <p class="text-muted small">No completed tasks yet.</p>
-        }
-        else
-        {
-            var visibleCompleted = showAllCompleted ? completed : completed.Take(3).ToList();
-            <div class="list-group shadow-sm">
-                @foreach (var task in visibleCompleted)
+            else
+            {
+                <!-- Pending -->
+                <div class="section-header mb-2 mt-2">
+                    <h5 class="mb-0">Pending <span class="badge bg-primary ms-1">@pending.Count</span></h5>
+                    @if (pending.Count > 3)
+                    {
+                        <button class="btn btn-sm btn-outline-primary" @onclick="() => showAllPending = !showAllPending">
+                            @(showAllPending ? "Show Less" : $"See All ({pending.Count})")
+                        </button>
+                    }
+                </div>
+
+                @if (pending.Count == 0)
                 {
-                    <div @key="task.Id" class="list-group-item list-group-item-action d-flex align-items-start gap-3 py-3 bg-light">
-                        <input class="form-check-input mt-1 flex-shrink-0" type="checkbox"
-                               checked="@task.IsCompleted"
-                               @onchange="() => ToggleComplete(task.Id, task.IsCompleted)" />
-                        <div class="flex-grow-1 min-width-0">
-                            <div class="d-flex justify-content-between align-items-start gap-2">
-                                <span class="text-decoration-line-through text-muted">@task.Title</span>
-                                <span class="badge bg-secondary text-white flex-shrink-0">@task.Category</span>
-                            </div>
-                            @if (!string.IsNullOrWhiteSpace(task.Description))
-                            {
-                                <div class="small mt-1">
-                                    @if (task.Description!.Length <= 200)
+                    <p class="text-muted small mb-4">No pending tasks in this category.</p>
+                }
+                else
+                {
+                    var visiblePending = showAllPending ? pending : pending.Take(3).ToList();
+                    <div class="list-group shadow-sm mb-4">
+                        @foreach (var task in visiblePending)
+                        {
+                            <div @key="task.Id" class="list-group-item task-item d-flex align-items-start gap-3 py-3 @CategoryClass(task.Category)">
+                                <input class="form-check-input mt-1 flex-shrink-0" type="checkbox"
+                                       checked="@task.IsCompleted"
+                                       @onchange="() => ToggleComplete(task.Id, task.IsCompleted)" />
+                                <div class="flex-grow-1 min-width-0">
+                                    <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap">
+                                        <span class="fw-semibold task-title">@task.Title</span>
+                                        <span class="badge @CategoryBadge(task.Category) flex-shrink-0">@task.Category</span>
+                                    </div>
+                                    @if (!string.IsNullOrWhiteSpace(task.Description))
                                     {
-                                        @task.Description
+                                        <div class="small mt-1 text-secondary">
+                                            @if (task.Description!.Length <= 200)
+                                            {
+                                                @task.Description
+                                            }
+                                            else if (expandedTasks.Contains(task.Id))
+                                            {
+                                                @task.Description
+                                                <button class="btn btn-link btn-sm p-0 ms-1 text-primary" @onclick="() => ToggleExpand(task.Id)">See less</button>
+                                            }
+                                            else
+                                            {
+                                                @(task.Description!.Substring(0, 200))
+                                                <span>... </span><button class="btn btn-link btn-sm p-0 text-primary" @onclick="() => ToggleExpand(task.Id)">See more</button>
+                                            }
+                                        </div>
                                     }
-                                    else if (expandedTasks.Contains(task.Id))
-                                    {
-                                        @task.Description
-                                        <button class="btn btn-link btn-sm p-0 ms-1 text-primary" @onclick="() => ToggleExpand(task.Id)">See less</button>
-                                    }
-                                    else
-                                    {
-                                        @(task.Description!.Substring(0, 200))
-                                        <span>... </span><button class="btn btn-link btn-sm p-0 text-primary" @onclick="() => ToggleExpand(task.Id)">See more</button>
-                                    }
+                                    <div class="task-dates small mt-1">
+                                        <span>Created: @task.CreatedAt.ToString("MM/dd/yy h:mm tt")</span>
+                                    </div>
                                 </div>
-                            }
-                            <div class="task-dates small mt-1">
-                                <span>Created: @task.CreatedAt.ToString("MM/dd/yy h:mm tt")</span>
-                                @if (task.CompletedAt.HasValue)
-                                {
-                                    <span>Completed: @task.CompletedAt.Value.ToString("MM/dd/yy h:mm tt")</span>
-                                }
+                                <div class="task-actions d-flex gap-1 flex-shrink-0">
+                                    <button class="btn btn-sm btn-outline-primary" @onclick="() => StartEdit(task)">Edit</button>
+                                    <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteTask(task.Id)">Delete</button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-flex gap-1 flex-shrink-0">
-                            <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteTask(task.Id)">Delete</button>
-                        </div>
+                        }
                     </div>
                 }
-            </div>
-        }
-    }
 
+                <!-- Completed -->
+                <div class="section-header mb-2">
+                    <h5 class="mb-0">Completed <span class="badge bg-success ms-1">@completed.Count</span></h5>
+                    @if (completed.Count > 3)
+                    {
+                        <button class="btn btn-sm btn-outline-success" @onclick="() => showAllCompleted = !showAllCompleted">
+                            @(showAllCompleted ? "Show Less" : $"See All ({completed.Count})")
+                        </button>
+                    }
+                </div>
+
+                @if (completed.Count == 0)
+                {
+                    <p class="text-muted small">No completed tasks in this category yet.</p>
+                }
+                else
+                {
+                    var visibleCompleted = showAllCompleted ? completed : completed.Take(3).ToList();
+                    <div class="list-group shadow-sm">
+                        @foreach (var task in visibleCompleted)
+                        {
+                            <div @key="task.Id" class="list-group-item task-item task-completed d-flex align-items-start gap-3 py-3">
+                                <input class="form-check-input mt-1 flex-shrink-0" type="checkbox"
+                                       checked="@task.IsCompleted"
+                                       @onchange="() => ToggleComplete(task.Id, task.IsCompleted)" />
+                                <div class="flex-grow-1 min-width-0">
+                                    <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap">
+                                        <span class="text-decoration-line-through text-muted task-title">@task.Title</span>
+                                        <span class="badge @CategoryBadge(task.Category) opacity-50 flex-shrink-0">@task.Category</span>
+                                    </div>
+                                    @if (!string.IsNullOrWhiteSpace(task.Description))
+                                    {
+                                        <div class="small mt-1 text-muted">
+                                            @if (task.Description!.Length <= 200)
+                                            {
+                                                @task.Description
+                                            }
+                                            else if (expandedTasks.Contains(task.Id))
+                                            {
+                                                @task.Description
+                                                <button class="btn btn-link btn-sm p-0 ms-1 text-primary" @onclick="() => ToggleExpand(task.Id)">See less</button>
+                                            }
+                                            else
+                                            {
+                                                @(task.Description!.Substring(0, 200))
+                                                <span>... </span><button class="btn btn-link btn-sm p-0 text-primary" @onclick="() => ToggleExpand(task.Id)">See more</button>
+                                            }
+                                        </div>
+                                    }
+                                    <div class="task-dates small mt-1">
+                                        <span>Created: @task.CreatedAt.ToString("MM/dd/yy h:mm tt")</span>
+                                        @if (task.CompletedAt.HasValue)
+                                        {
+                                            <span>Done: @task.CompletedAt.Value.ToString("MM/dd/yy h:mm tt")</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="task-actions d-flex gap-1 flex-shrink-0">
+                                    <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteTask(task.Id)">Delete</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        }
     } @* end @if (!showForm) *@
 </div>
 
 @code {
+    private static readonly string[] Categories = { "All", "Personal", "Work", "School", "Health", "Other" };
+
     private List<TaskItem>? tasks;
     private bool showForm;
     private int? editingTaskId;
@@ -220,6 +275,14 @@
     private int descLength;
     private bool showAllPending;
     private bool showAllCompleted;
+    private string selectedCategory = "All";
+
+    private void SelectCategory(string category)
+    {
+        selectedCategory = category;
+        showAllPending = false;
+        showAllCompleted = false;
+    }
 
     private void ToggleExpand(int taskId)
     {
@@ -282,11 +345,11 @@
         {
             var newTask = new TaskItem
             {
-                Title = formModel.Title,
+                Title       = formModel.Title,
                 Description = formModel.Description,
-                Category = formModel.Category,
-                UserId = currentUserId,
-                CreatedAt = DateTime.Now
+                Category    = formModel.Category,
+                UserId      = currentUserId,
+                CreatedAt   = DateTime.Now
             };
             Db.TaskItems.Add(newTask);
         }
@@ -295,9 +358,9 @@
             var existing = await Db.TaskItems.FindAsync(editingTaskId);
             if (existing != null && existing.UserId == currentUserId)
             {
-                existing.Title = formModel.Title;
+                existing.Title       = formModel.Title;
                 existing.Description = formModel.Description;
-                existing.Category = formModel.Category;
+                existing.Category    = formModel.Category;
             }
         }
 
@@ -330,13 +393,22 @@
         await LoadTasks();
     }
 
-    private static string CategoryColor(string category) => category switch
+    private static string CategoryClass(string category) => category switch
     {
         "Work"     => "task-work",
         "School"   => "task-school",
         "Health"   => "task-health",
         "Personal" => "task-personal",
         _          => "task-other"
+    };
+
+    private static string CategoryBadge(string category) => category switch
+    {
+        "Work"     => "badge-work",
+        "School"   => "badge-school",
+        "Health"   => "badge-health",
+        "Personal" => "badge-personal",
+        _          => "badge-other"
     };
 
     private class TaskFormModel

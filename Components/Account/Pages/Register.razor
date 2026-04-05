@@ -1,4 +1,4 @@
-﻿@page "/Account/Register"
+@page "/Account/Register"
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
@@ -6,6 +6,7 @@
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
+@inject IPasswordHasher<ApplicationUser> PasswordHasher
 @inject ILogger<Register> Logger
 @inject IdentityRedirectManager RedirectManager
 
@@ -21,25 +22,88 @@
             <h2>Create a new account.</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
+
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control"
+                           autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label for="Input.Email">Email</label>
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
+
+            <div class="mb-1">
+                <div class="input-group">
+                    <div class="form-floating flex-grow-1">
+                        <InputText type="password" @bind-Value="Input.Password" id="Input.Password"
+                                   class="form-control rounded-end-0"
+                                   autocomplete="new-password" aria-required="true" placeholder="Admin1234?"
+                                   oninput="checkPasswordReqs(this.value)" />
+                        <label for="Input.Password">Password</label>
+                    </div>
+                    <button class="btn btn-outline-secondary pw-toggle" type="button"
+                            onclick="togglePassword('Input.Password', this)" aria-label="Show password">
+                        @((MarkupString)EyeIcon)
+                    </button>
+                </div>
+                <ValidationMessage For="() => Input.Password" class="text-danger small" />
+            </div>
+
+            <!-- Password requirements checklist -->
+            <div class="pw-requirements mb-3 mt-2">
+                <p class="req-heading">Password must contain:</p>
+                <ul>
+                    <li id="req-length">  At least 6 characters</li>
+                    <li id="req-upper">   At least one uppercase letter (A–Z)</li>
+                    <li id="req-lower">   At least one lowercase letter (a–z)</li>
+                    <li id="req-digit">   At least one number (0–9)</li>
+                    <li id="req-special"> At least one special character (!&#64;#$%…)</li>
+                </ul>
+            </div>
+
+            <div class="mb-3">
+                <div class="input-group">
+                    <div class="form-floating flex-grow-1">
+                        <InputText type="password" @bind-Value="Input.ConfirmPassword" id="Input.ConfirmPassword"
+                                   class="form-control rounded-end-0"
+                                   autocomplete="new-password" aria-required="true" placeholder="Admin1234?" />
+                        <label for="Input.ConfirmPassword">Confirm Password</label>
+                    </div>
+                    <button class="btn btn-outline-secondary pw-toggle" type="button"
+                            onclick="togglePassword('Input.ConfirmPassword', this)" aria-label="Show password">
+                        @((MarkupString)EyeIcon)
+                    </button>
+                </div>
+                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger small" />
+            </div>
+
+            <hr />
+            <p class="text-muted small mb-3">
+                Choose a security question. You'll use this to recover your account if you forget your password.
+            </p>
             <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="Input.Password">Password</label>
-                <ValidationMessage For="() => Input.Password" class="text-danger" />
+                <InputSelect @bind-Value="Input.SecurityQuestion" id="Input.SecurityQuestion"
+                             class="form-select" aria-required="true">
+                    <option value="">-- Select a question --</option>
+                    <option>In what city were you born?</option>
+                    <option>What is the name of your first pet?</option>
+                    <option>What is your mother's maiden name?</option>
+                    <option>What was the name of your elementary school?</option>
+                    <option>What is the make of your first car?</option>
+                </InputSelect>
+                <label for="Input.SecurityQuestion">Security Question</label>
+                <ValidationMessage For="() => Input.SecurityQuestion" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" id="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="Input.ConfirmPassword">Confirm Password</label>
-                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                <InputText @bind-Value="Input.SecurityAnswer" id="Input.SecurityAnswer"
+                           class="form-control" autocomplete="off" placeholder="Your answer" />
+                <label for="Input.SecurityAnswer">Your Answer</label>
+                <ValidationMessage For="() => Input.SecurityAnswer" class="text-danger" />
             </div>
+
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </EditForm>
     </div>
 </div>
+
 
 @code {
     private IEnumerable<IdentityError>? identityErrors;
@@ -52,45 +116,44 @@
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
+    private const string EyeIcon = "<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewBox='0 0 16 16'><path d='M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z'/><path d='M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z'/></svg>";
+
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
+        user.SecurityQuestion = Input.SecurityQuestion;
 
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-        var result = await UserManager.CreateAsync(user, Input.Password);
 
+        var result = await UserManager.CreateAsync(user, Input.Password);
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
             return;
         }
 
-        Logger.LogInformation("User created a new account with password.");
+        user.SecurityAnswerHash = PasswordHasher.HashPassword(user, Input.SecurityAnswer.Trim().ToLowerInvariant());
+        await UserManager.UpdateAsync(user);
 
+        Logger.LogInformation("User created a new account with password.");
         RedirectManager.RedirectTo("Account/RegisterConfirmation");
     }
 
     private ApplicationUser CreateUser()
     {
-        try
-        {
-            return Activator.CreateInstance<ApplicationUser>();
-        }
+        try { return Activator.CreateInstance<ApplicationUser>(); }
         catch
         {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'.");
         }
     }
 
     private IUserEmailStore<ApplicationUser> GetEmailStore()
     {
         if (!UserManager.SupportsUserEmail)
-        {
             throw new NotSupportedException("The default UI requires a user store with email support.");
-        }
         return (IUserEmailStore<ApplicationUser>)UserStore;
     }
 
@@ -111,5 +174,14 @@
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
+
+        [Required(ErrorMessage = "Please select a security question.")]
+        [Display(Name = "Security question")]
+        public string SecurityQuestion { get; set; } = "";
+
+        [Required(ErrorMessage = "Please provide an answer.")]
+        [StringLength(200, MinimumLength = 2, ErrorMessage = "Answer must be between 2 and 200 characters.")]
+        [Display(Name = "Security answer")]
+        public string SecurityAnswer { get; set; } = "";
     }
 }

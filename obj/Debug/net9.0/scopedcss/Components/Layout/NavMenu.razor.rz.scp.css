@@ -22,6 +22,31 @@
 
 .navbar-brand[b-0vopw5h1mv] {
     font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.brand-icon[b-0vopw5h1mv] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    background: rgba(255,255,255,0.18);
+    border-radius: 0.4rem;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.nav-divider[b-0vopw5h1mv] {
+    height: 1px;
+    background: rgba(255,255,255,0.12);
+    margin: 0.4rem 0;
+}
+
+.nav-link-user[b-0vopw5h1mv] {
+    font-size: 0.82rem;
+    opacity: 0.85;
 }
 
 .bi[b-0vopw5h1mv] {

@@ -153,6 +153,12 @@ namespace TaskFlow.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("SecurityQuestion")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SecurityAnswerHash")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");

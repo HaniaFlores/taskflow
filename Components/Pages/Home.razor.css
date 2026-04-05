@@ -29,6 +29,30 @@
     line-height: 1.6;
 }
 
+@media (max-width: 575.98px) {
+    .hero {
+        min-height: 45vh;
+        padding: 2rem 1.25rem;
+        border-radius: 0;
+    }
+
+    .hero-title {
+        font-size: 1.75rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .features {
+        padding: 2.5rem 1rem;
+    }
+
+    .features-heading {
+        font-size: 1.3rem;
+    }
+}
+
 .hero .btn-outline-secondary {
     color: white;
     border-color: rgba(255, 255, 255, 0.5);

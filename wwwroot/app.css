@@ -2,6 +2,63 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+/* ── Password toggle button ── */
+.pw-toggle {
+    border-left: 0;
+    color: #6c757d;
+    padding: 0 0.75rem;
+}
+.pw-toggle:hover {
+    color: #1b6ec2;
+    background-color: #f8f9fa;
+}
+
+/* ── Password requirements checklist ── */
+.pw-requirements {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+}
+.pw-requirements .req-heading {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: #495057;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.pw-requirements ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.pw-requirements li {
+    color: #adb5bd;
+    padding-left: 1.4rem;
+    position: relative;
+    transition: color 0.15s;
+}
+.pw-requirements li::before {
+    content: '✕';
+    position: absolute;
+    left: 0;
+    font-size: 0.75rem;
+    color: #adb5bd;
+    transition: color 0.15s;
+}
+.pw-requirements li.req-met {
+    color: #198754;
+}
+.pw-requirements li.req-met::before {
+    content: '✓';
+    color: #198754;
+}
+
 a, .btn-link {
     color: #006bb7;
 }

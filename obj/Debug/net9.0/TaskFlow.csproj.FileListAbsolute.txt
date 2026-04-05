@@ -149,7 +149,6 @@ C:\Users\hanni\TaskFlow\obj\Debug\net9.0\scopedcss\Components\Layout\MainLayout.
 C:\Users\hanni\TaskFlow\obj\Debug\net9.0\scopedcss\Components\Layout\NavMenu.razor.rz.scp.css
 C:\Users\hanni\TaskFlow\obj\Debug\net9.0\scopedcss\bundle\TaskFlow.styles.css
 C:\Users\hanni\TaskFlow\obj\Debug\net9.0\scopedcss\projectbundle\TaskFlow.bundle.scp.css
-C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\najaz9lnwi-khy4lop6wu.gz
 C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\o6jkikmwbp-bqjiyaj88i.gz
 C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\pngxut1eh7-c2jlpeoesf.gz
 C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\sy2hy7x6i7-erw9l3u2r3.gz
@@ -207,5 +206,7 @@ C:\Users\hanni\TaskFlow\obj\Debug\net9.0\ref\TaskFlow.dll
 C:\Users\hanni\TaskFlow\obj\Debug\net9.0\TaskFlow.sourcelink.json
 C:\Users\hanni\TaskFlow\obj\Debug\net9.0\scopedcss\Components\Pages\Home.razor.rz.scp.css
 C:\Users\hanni\TaskFlow\obj\Debug\net9.0\scopedcss\Components\Pages\Dashboard.razor.rz.scp.css
-C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\9xjr6hsmjh-qx5p17pi6y.gz
-C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\e4ehmqsj54-qx5p17pi6y.gz
+C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\9xjr6hsmjh-ke8p85f41a.gz
+C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\e4ehmqsj54-ke8p85f41a.gz
+C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\najaz9lnwi-hdxeim8s0i.gz
+C:\Users\hanni\TaskFlow\obj\Debug\net9.0\compressed\2fj4g0fxkq-xhe78pih8n.gz

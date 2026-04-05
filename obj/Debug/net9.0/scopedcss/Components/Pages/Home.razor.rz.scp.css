@@ -29,6 +29,30 @@
     line-height: 1.6;
 }
 
+@media (max-width: 575.98px) {
+    .hero[b-775shsx2gj] {
+        min-height: 45vh;
+        padding: 2rem 1.25rem;
+        border-radius: 0;
+    }
+
+    .hero-title[b-775shsx2gj] {
+        font-size: 1.75rem;
+    }
+
+    .hero-subtitle[b-775shsx2gj] {
+        font-size: 0.95rem;
+    }
+
+    .features[b-775shsx2gj] {
+        padding: 2.5rem 1rem;
+    }
+
+    .features-heading[b-775shsx2gj] {
+        font-size: 1.3rem;
+    }
+}
+
 .hero .btn-outline-secondary[b-775shsx2gj] {
     color: white;
     border-color: rgba(255, 255, 255, 0.5);

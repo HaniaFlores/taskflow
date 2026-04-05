@@ -1,10 +1,13 @@
-﻿@implements IDisposable
+@implements IDisposable
 
 @inject NavigationManager NavigationManager
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">TaskFlow</a>
+        <a class="navbar-brand d-flex align-items-center gap-2" href="">
+            <span class="brand-icon">&#10003;</span>
+            TaskFlow
+        </a>
     </div>
 </div>
 
@@ -18,17 +21,20 @@
             </NavLink>
         </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="dashboard">
-                <span class="bi bi-list-check-nav-menu" aria-hidden="true"></span> My Tasks
-            </NavLink>
-        </div>
-
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                    <NavLink class="nav-link" href="dashboard">
+                        <span class="bi bi-list-check-nav-menu" aria-hidden="true"></span> My Tasks
+                    </NavLink>
+                </div>
+
+                <div class="nav-divider mx-3"></div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link nav-link-user" href="Account/Manage">
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span>
+                        <span class="text-truncate" style="max-width: 140px;">@context.User.Identity?.Name</span>
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
@@ -42,6 +48,7 @@
                 </div>
             </Authorized>
             <NotAuthorized>
+                <div class="nav-divider mx-3"></div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Register">
                         <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
@@ -77,4 +84,3 @@
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
 }
-

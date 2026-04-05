@@ -3,3 +3,12 @@
 .task-health   { background-color: #eafaf1; }
 .task-personal { background-color: #f5eef8; }
 .task-other    { background-color: #faf0e6; }
+
+.task-dates {
+    display: flex;
+    gap: 1.25rem;
+    color: #888;
+    margin-top: 0.25rem;
+    border-top: 1px dashed #ddd;
+    padding-top: 0.25rem;
+}

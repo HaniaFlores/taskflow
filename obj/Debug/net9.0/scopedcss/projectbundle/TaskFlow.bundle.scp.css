@@ -233,6 +233,15 @@ main[b-lumq4bmu1d] {
 .task-health[b-iqrhu7h1om]   { background-color: #eafaf1; }
 .task-personal[b-iqrhu7h1om] { background-color: #f5eef8; }
 .task-other[b-iqrhu7h1om]    { background-color: #faf0e6; }
+
+.task-dates[b-iqrhu7h1om] {
+    display: flex;
+    gap: 1.25rem;
+    color: #888;
+    margin-top: 0.25rem;
+    border-top: 1px dashed #ddd;
+    padding-top: 0.25rem;
+}
 /* _content/TaskFlow/Components/Pages/Home.razor.rz.scp.css */
 /* Hero */
 .hero[b-775shsx2gj] {
